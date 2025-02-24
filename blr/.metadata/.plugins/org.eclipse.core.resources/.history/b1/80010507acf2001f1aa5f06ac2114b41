@@ -1,0 +1,48 @@
+package com.task.blr.service;
+
+import com.task.blr.entity.TaskEntity;
+import com.task.blr.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class TaskServiceImpl implements TaskService{
+@Autowired
+TaskRepository repository;
+
+    @Override
+    public TaskEntity save(TaskEntity model) {
+          repository.save(model);
+        return model;
+    }
+
+    @Override
+    public TaskEntity update(TaskEntity updateEn) {
+        TaskEntity update = repository.getReferenceById(updateEn.getId());
+        update.setStatus(updateEn.isStatus());
+        update.setDescription(updateEn.getDescription());
+        update.setTitle(updateEn.getTitle());
+        update.setEndDate(updateEn.getEndDate());
+        return repository.save(update);
+    }
+
+    @Override
+    public TaskEntity delete(long id) {
+        TaskEntity delete = repository.getReferenceById(id);
+        repository.delete(delete);
+        return delete;
+    }
+
+    @Override
+    public List<TaskEntity> getTaskTitle(String title) {
+        return repository.findByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
+    public List<TaskEntity> getAll() {
+
+        return repository.findAll();
+    }
+}

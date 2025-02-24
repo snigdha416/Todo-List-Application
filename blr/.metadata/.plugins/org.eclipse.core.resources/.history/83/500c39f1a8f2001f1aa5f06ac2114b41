@@ -1,0 +1,43 @@
+package com.task.blr.controller;
+
+import com.task.blr.entity.TaskEntity;
+import com.task.blr.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+@CrossOrigin
+@RestController
+public class TaskController {
+
+    @Autowired
+    TaskService service;
+
+    @GetMapping(value = "/health")
+    public String getHealth(){
+        return "working";
+    }
+    @PostMapping(value = "/addTask")
+    public TaskEntity addTask(@RequestBody TaskEntity model){
+        service.save(model);
+        return model;
+    }
+    @GetMapping(value = "/getTasks")
+    public List<TaskEntity> getTasks(){
+        return service.getAll();
+    }
+    @GetMapping(value = "/getTasks/{title}")
+    public List<TaskEntity> getTasksByTitle(@PathVariable String title){
+        return service.getTaskTitle(title);
+    }
+
+    @PutMapping(value = "/updateTasks")
+    public TaskEntity updateTasks(@RequestBody TaskEntity model){
+        return service.update(model);
+    }
+
+    @DeleteMapping(value = "/deleteTasks/{id}")
+    public TaskEntity deleteTasks(@PathVariable long id){
+        return service.delete(id);
+    }
+}
